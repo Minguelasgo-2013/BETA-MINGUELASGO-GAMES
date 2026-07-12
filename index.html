@@ -157,22 +157,12 @@
     </div>
 
     <script>
-    /*
-    ============================================
-    CONFIGURACION
-    ============================================
-    Los hashes se generan con SHA-256.
-    Para generar tus propios hashes, abre la consola del navegador (F12)
-    y ejecuta:  generateHash('nombre', 'contraseña')
-    Luego copia el hash que aparece y ponlo aqui abajo.
-    */
     var BETA_USERS = [
         '26b64b2b8a4d186cdbeb03a4db0599db0781e1ce5c44885d263f832c53c024b1'
     ];
 
-    var REDIRECT_URL = 'beta.html';
-
-    // ============================================
+    var SECRET_KEY = 'mG2026xR9kLz';
+    var failCount = 0;
 
     async function sha256(text) {
         var encoder = new TextEncoder();
@@ -182,18 +172,26 @@
         return hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
     }
 
-    // Funcion para generar hashes desde la consola del navegador
+    async function generateToken(user) {
+        return await sha256(SECRET_KEY + ':' + user + ':' + SECRET_KEY);
+    }
+
     window.generateHash = async function(user, pass) {
         var hash = await sha256(user.toLowerCase() + ':' + pass);
-        console.log('Hash para ' + user + ': ' + hash);
-        console.log('Copia esta linea en BETA_USERS:');
         console.log("'" + hash + "',");
         return hash;
     };
 
-    if (sessionStorage.getItem('beta_access') === 'granted') {
-        window.location.href = REDIRECT_URL;
-    }
+    (async function() {
+        var token = sessionStorage.getItem('beta_token');
+        var user = sessionStorage.getItem('beta_user');
+        if (token && user) {
+            var valid = await generateToken(user);
+            if (token === valid) {
+                window.location.href = atob('YmV0YS5odG1s');
+            }
+        }
+    })();
 
     async function handleLogin(e) {
         e.preventDefault();
@@ -206,20 +204,25 @@
         btn.disabled = true;
         btn.textContent = 'Verificando...';
 
-        var hash = await sha256(user + ':' + pass);
+        var delay = Math.min(failCount * 1000, 5000);
+        await new Promise(function(r) { setTimeout(r, delay); });
 
+        var hash = await sha256(user + ':' + pass);
         var found = BETA_USERS.indexOf(hash) !== -1;
 
         if (found) {
-            sessionStorage.setItem('beta_access', 'granted');
+            failCount = 0;
+            var token = await generateToken(user);
+            sessionStorage.setItem('beta_token', token);
             sessionStorage.setItem('beta_user', user);
             btn.textContent = 'Acceso concedido';
             btn.style.background = '#4caf50';
             setTimeout(function() {
-                window.location.href = REDIRECT_URL;
+                window.location.href = atob('YmV0YS5odG1s');
             }, 500);
         } else {
-            errorEl.textContent = 'Usuario o contraseña incorrectos';
+            failCount++;
+            errorEl.textContent = 'Usuario o contraseña incorrectos' + (failCount >= 3 ? ' (espera ' + Math.min(failCount, 5) + 's)' : '');
             btn.disabled = false;
             btn.textContent = 'Entrar a la Beta';
         }
