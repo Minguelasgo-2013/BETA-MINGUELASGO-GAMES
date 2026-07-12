@@ -157,12 +157,25 @@
     </div>
 
     <script>
+    // PERMANENTE - tu cuenta principal (nunca se gasta)
     var BETA_USERS = [
         '26b64b2b8a4d186cdbeb03a4db0599db0781e1ce5c44885d263f832c53c024b1'
     ];
 
+    // DESECHABLES - cada una funciona solo 1 vez (linea 170-174)
+    var DISPOSABLE_USERS = [
+        'e7fd1732c3383a35dfe70cb273243b9b15013d278b663ac70212ddefe66325e5',
+        'f7523820e9e52bcbb2fea32b6593470426ea0a4f0eabfa633551e4e547ffe959',
+        'abdefd215c710738a1bbace555f378c83953fefc8bd1454baf75731751b0e7bd',
+        '959ba26158986deb64689bd230627676bd066cfccc796f12b17a21568291ff34',
+        'b829091b786090f947ffa3eef9fe442488b90ad2160fc30d3bef1b5c8dd64522'
+    ];
+
     var SECRET_KEY = 'mG2026xR9kLz';
     var failCount = 0;
+
+    function getUsedKeys() { return JSON.parse(localStorage.getItem('mg_used_keys') || '[]'); }
+    function markUsed(hash) { var used = getUsedKeys(); used.push(hash); localStorage.setItem('mg_used_keys', JSON.stringify(used)); }
 
     async function sha256(text) {
         var encoder = new TextEncoder();
@@ -208,10 +221,21 @@
         await new Promise(function(r) { setTimeout(r, delay); });
 
         var hash = await sha256(user + ':' + pass);
-        var found = BETA_USERS.indexOf(hash) !== -1;
+        var isPermanent = BETA_USERS.indexOf(hash) !== -1;
+        var isDisposable = DISPOSABLE_USERS.indexOf(hash) !== -1;
+        var used = getUsedKeys();
 
-        if (found) {
+        if (isDisposable && used.indexOf(hash) !== -1) {
+            failCount++;
+            errorEl.textContent = 'Esta clave ya fue usada';
+            btn.disabled = false;
+            btn.textContent = 'Entrar a la Beta';
+            return false;
+        }
+
+        if (isPermanent || isDisposable) {
             failCount = 0;
+            if (isDisposable) markUsed(hash);
             var token = await generateToken(user);
             sessionStorage.setItem('beta_token', token);
             sessionStorage.setItem('beta_user', user);
