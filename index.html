@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINGUELASGO GAMES - Beta Access</title>
+    <meta name="theme-color" content="#ffffff">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo h1 {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+
+        .login-logo .beta-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 12px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            color: #1a1a1a;
+            background: #fafafa;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #1a1a1a;
+            background: #ffffff;
+        }
+
+        .input-group input::placeholder {
+            color: #aaa;
+        }
+
+        .login-btn {
+            margin-top: 8px;
+            padding: 14px;
+            background: #1a1a1a;
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .login-btn:hover {
+            background: #333;
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        .login-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error-msg {
+            text-align: center;
+            font-size: 0.85em;
+            color: #e53935;
+            min-height: 20px;
+            margin-top: 4px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">
+            <h1>MINGUELASGO GAMES</h1>
+            <span class="beta-badge">Beta Privada</span>
+        </div>
+
+        <form class="login-form" id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="input-group">
+                <label for="username">Nombre de usuario</label>
+                <input type="text" id="username" placeholder="Tu nombre de beta tester" autocomplete="off" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Contraseña de acceso" required>
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn">Entrar a la Beta</button>
+            <div class="error-msg" id="errorMsg"></div>
+        </form>
+
+        <p class="footer-text">&copy; 2026 MINGUELASGO GAMES</p>
+    </div>
+
+    <script>
+    /*
+    ============================================
+    CONFIGURACION - Cambia estos datos
+    ============================================
+    Pon aqui los usuarios que quieres que tengan acceso.
+    Puedes agregar todos los que quieras.
+    */
+    var BETA_USERS = [
+        { user: 'admin', pass: 'beta2026' },
+        { user: 'tester1', pass: 'minguelasgo1' },
+        { user: 'tester2', pass: 'minguelasgo2' }
+    ];
+
+    /*
+    Esta es la URL a donde se redirige despues de login exitoso.
+    Cambiala por la URL de tu pagina de juegos beta.
+    */
+    var REDIRECT_URL = 'index.html';
+
+    // ============================================
+
+    // Si ya esta logueado, redirigir directamente
+    if (sessionStorage.getItem('beta_access') === 'granted') {
+        window.location.href = REDIRECT_URL;
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        var user = document.getElementById('username').value.trim().toLowerCase();
+        var pass = document.getElementById('password').value;
+        var errorEl = document.getElementById('errorMsg');
+        var btn = document.getElementById('loginBtn');
+
+        errorEl.textContent = '';
+        btn.disabled = true;
+        btn.textContent = 'Verificando...';
+
+        setTimeout(function() {
+            var found = BETA_USERS.find(function(u) {
+                return u.user.toLowerCase() === user && u.pass === pass;
+            });
+
+            if (found) {
+                sessionStorage.setItem('beta_access', 'granted');
+                sessionStorage.setItem('beta_user', user);
+                btn.textContent = 'Acceso concedido';
+                btn.style.background = '#4caf50';
+                setTimeout(function() {
+                    window.location.href = REDIRECT_URL;
+                }, 500);
+            } else {
+                errorEl.textContent = 'Usuario o contraseña incorrectos';
+                btn.disabled = false;
+                btn.textContent = 'Entrar a la Beta';
+            }
+        }, 600);
+
+        return false;
+    }
+    </script>
+</body>
+</html>
