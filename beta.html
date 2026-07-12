@@ -413,7 +413,7 @@
             <h2>Bienvenido a MINGUELASGO GAMES</h2>
             <p>La plataforma ha sido renovada con nuevas funciones.</p>
             <div class="welcome-features">
-                <div class="welcome-feat">17 Juegos</div>
+                <div class="welcome-feat">18 Juegos</div>
                 <div class="welcome-feat">Ranking Global</div>
                 <div class="welcome-feat">Chat en Vivo</div>
                 <div class="welcome-feat">Logros</div>
@@ -478,7 +478,7 @@
     <section class="hero">
         <div class="hero-bg-anim"><div class="hero-orb"></div><div class="hero-orb"></div><div class="hero-orb"></div></div>
         <div class="hero-logo">MINGUELASGO GAMES</div>
-        <p class="hero-tagline">Tu plataforma de juegos favorita, renovada. 17 juegos, ranking global, chat en vivo, logros y mucho mas.</p>
+        <p class="hero-tagline">Tu plataforma de juegos favorita, renovada. 18 juegos, ranking global, chat en vivo, logros y mucho mas.</p>
         <div class="hero-stats">
             <div class="hero-stat"><div class="hero-stat-number" id="statGames">0</div><div class="hero-stat-label">Juegos</div></div>
             <div class="hero-stat"><div class="hero-stat-number" id="statPlayers">0</div><div class="hero-stat-label">Jugadores</div></div>
@@ -505,7 +505,7 @@
     </section>
 
     <section id="catalogo">
-        <div class="section-header fade-in"><h2 class="section-title">Catalogo de Juegos</h2><p class="section-subtitle">Explora nuestros 17 juegos</p></div>
+        <div class="section-header fade-in"><h2 class="section-title">Catalogo de Juegos</h2><p class="section-subtitle">Explora nuestros 18 juegos</p></div>
         <div class="search-bar fade-in"><span class="search-icon">&#128269;</span><input type="text" id="searchInput" placeholder="Buscar juegos..." oninput="searchGames()"></div>
         <div class="filter-tabs fade-in" id="filterTabs"></div>
         <div class="games-grid" id="gamesGrid"></div>
@@ -632,7 +632,8 @@
         {name:'Wasteland',folder:'Wasteland',icon:'🏜️',cat:'Accion',grad:3,desc:'Sobrevive en el paramo'},
         {name:'ZOMBIE ASSAULT',folder:'ZOMBIEASSAULT',icon:'🧟',cat:'Accion',grad:4,desc:'Elimina zombies sin parar'},
         {name:'Juego 3',folder:'juego3',icon:'🎲',cat:'Otros',grad:5,desc:'Un juego misterioso'},
-        {name:'Vapor Chronicles',folder:'vapor-chronicles',icon:'📖',cat:'Aventura',grad:6,desc:'Cronicas del vapor'}
+        {name:'Vapor Chronicles',folder:'vapor-chronicles',icon:'📖',cat:'Aventura',grad:6,desc:'Cronicas del vapor'},
+        {name:'Survival VIP',folder:'SurvivalVIP',icon:'☠️',cat:'Accion',grad:6,desc:'Sobrevive en una isla desierta'}
     ];
 
     // SEARCH
@@ -772,7 +773,7 @@
 
     var chatResponses={
         'hola':'Hola! Bienvenido a MINGUELASGO GAMES. Puedo recomendarte juegos o ayudarte con la plataforma.',
-        'juegos':'Tenemos 17 juegos disponibles: Accion, Aventura, Arcade y Estrategia. Te recomiendo ZOMBIE ASSAULT si te gusta la accion!',
+        'juegos':'Tenemos 18 juegos disponibles: Accion, Aventura, Arcade y Estrategia. Te recomiendo ZOMBIE ASSAULT o Survival VIP!',
         'ranking':'Puedes ver el ranking global en la seccion Ranking. Juega para sumar puntos y subir posiciones!',
         'cuenta':'Puedes crear una cuenta haciendo clic en "Iniciar sesion" y luego en "Registrate".',
         'favorito':'Los juegos mas populares son ZOMBIE ASSAULT, BlockDash y ExtremeCar.',
@@ -781,7 +782,7 @@
         'logros':'Hay 10 logros por desbloquear: desde crear tu cuenta hasta jugar a medianoche. Explora todos!',
         'zombie':'ZOMBIE ASSAULT es nuestro juego mas popular. Elimina oleadas de zombies sin parar!',
         'arcade':'Tenemos 4 juegos arcade: CazaPuntos, Miextrix, Mins y NOTOQUES.',
-        'default':'Interesante pregunta! Te recomiendo explorar nuestros 17 juegos. Escribe "juegos" o "ayuda" para mas info.'
+        'default':'Interesante pregunta! Te recomiendo explorar nuestros 18 juegos. Escribe "juegos" o "ayuda" para mas info.'
     };
 
     function sendChatbotMsg(){
@@ -834,7 +835,7 @@
 
     // COUNTERS
     function animateCount(el,target,dur){var s=0,step=target/(dur/16);function tick(){s+=step;if(s>=target){el.textContent=target;return;}el.textContent=Math.floor(s);requestAnimationFrame(tick);}tick();}
-    animateCount(document.getElementById('statGames'),17,1500);
+    animateCount(document.getElementById('statGames'),18,1500);
     db.collection('players').get().then(function(snap){animateCount(document.getElementById('statPlayers'),snap.size||0,1500);});
     db.collection('comments').get().then(function(snap){animateCount(document.getElementById('statReviews'),snap.size||0,1500);});
 
