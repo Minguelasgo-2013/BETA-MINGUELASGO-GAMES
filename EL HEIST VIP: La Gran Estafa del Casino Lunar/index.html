@@ -1,0 +1,1313 @@
+<!-- =========================
+🔥 EL HEIST VIP 2.0 🔥
+MEJORAS:
+✔ Sistema de dinero
+✔ Inventario
+✔ Guardias dinámicos
+✔ Música visual neon
+✔ Más mapas
+✔ Eventos aleatorios
+✔ Sistema de recompensas
+✔ Mercado negro
+✔ Niveles de dificultad
+✔ Mejor HUD
+✔ Animaciones
+✔ Más misiones
+✔ Sistema de detección
+✔ Escape final cinematográfico
+========================= -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EL HEIST VIP 2.0</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+:root{
+--bg:#090b12;
+--panel:#121826;
+--panel2:#1b2335;
+--gold:#ffcc00;
+--red:#ff4757;
+--green:#00d2a0;
+--blue:#00bfff;
+--text:#ecf0f1;
+}
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:
+radial-gradient(circle at top,#18213a 0%,#090b12 70%);
+color:var(--text);
+overflow:hidden;
+height:100vh;
+}
+
+.container{
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+/* MENU */
+
+.main-menu{
+position:absolute;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:
+linear-gradient(135deg,#0c1020,#10192e);
+z-index:20;
+}
+
+.title{
+font-size:5em;
+color:var(--gold);
+text-shadow:
+0 0 15px var(--gold),
+0 0 40px rgba(255,204,0,.5);
+animation:glow 2s infinite;
+margin-bottom:20px;
+}
+
+@keyframes glow{
+0%,100%{
+transform:scale(1);
+}
+50%{
+transform:scale(1.03);
+}
+}
+
+.subtitle{
+letter-spacing:4px;
+margin-bottom:40px;
+color:var(--green);
+}
+
+.btn{
+padding:15px 35px;
+margin:10px;
+background:var(--panel2);
+border:2px solid var(--gold);
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:.25s;
+font-size:1em;
+border-radius:10px;
+}
+
+.btn:hover{
+background:var(--gold);
+color:black;
+transform:scale(1.05);
+box-shadow:0 0 20px var(--gold);
+}
+
+/* GAME */
+
+.game{
+display:none;
+height:100vh;
+flex-direction:column;
+}
+
+.game.active{
+display:flex;
+}
+
+.header{
+height:80px;
+background:var(--panel);
+border-bottom:3px solid var(--gold);
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 20px;
+}
+
+.logo{
+font-size:1.7em;
+font-weight:bold;
+color:var(--gold);
+}
+
+.stats{
+display:flex;
+gap:20px;
+}
+
+.stat{
+background:var(--panel2);
+padding:10px 18px;
+border-radius:10px;
+border:1px solid #2d3750;
+}
+
+.stat b{
+color:var(--gold);
+}
+
+.main{
+flex:1;
+display:flex;
+overflow:hidden;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:300px;
+background:var(--panel);
+padding:20px;
+overflow-y:auto;
+border-right:2px solid var(--gold);
+}
+
+.section-title{
+color:var(--gold);
+margin-bottom:15px;
+font-size:1.1em;
+border-bottom:1px solid #32405c;
+padding-bottom:10px;
+}
+
+.member{
+background:var(--panel2);
+padding:12px;
+border-radius:10px;
+margin-bottom:12px;
+border-left:4px solid var(--blue);
+transition:.25s;
+}
+
+.member:hover{
+transform:translateX(5px);
+background:#222d44;
+}
+
+/* CENTER */
+
+.center{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+.tabs{
+display:flex;
+background:var(--panel);
+border-bottom:2px solid var(--gold);
+}
+
+.tab{
+flex:1;
+padding:15px;
+text-align:center;
+cursor:pointer;
+font-weight:bold;
+transition:.2s;
+}
+
+.tab.active{
+background:var(--gold);
+color:black;
+}
+
+.content{
+flex:1;
+padding:20px;
+overflow:auto;
+display:none;
+}
+
+.content.active{
+display:block;
+}
+
+.map{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+}
+
+.room{
+background:var(--panel2);
+padding:25px;
+border-radius:12px;
+border:2px solid #2c3955;
+cursor:pointer;
+transition:.25s;
+position:relative;
+overflow:hidden;
+}
+
+.room:hover{
+transform:scale(1.03);
+border-color:var(--gold);
+}
+
+.room.locked{
+opacity:.5;
+}
+
+.room.cleared{
+border-color:var(--green);
+background:rgba(0,210,160,.1);
+}
+
+.room::after{
+content:"";
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:
+linear-gradient(90deg,
+transparent,
+rgba(255,255,255,.08),
+transparent);
+transition:1s;
+}
+
+.room:hover::after{
+left:100%;
+}
+
+.actions{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.action{
+background:var(--panel2);
+padding:18px;
+border-radius:12px;
+cursor:pointer;
+border:2px solid #2d3c58;
+transition:.25s;
+}
+
+.action:hover{
+border-color:var(--gold);
+transform:translateY(-3px);
+}
+
+.action h3{
+color:var(--gold);
+margin-bottom:8px;
+}
+
+/* RIGHT */
+
+.right{
+width:300px;
+background:var(--panel);
+padding:20px;
+border-left:2px solid var(--gold);
+overflow:auto;
+}
+
+.progress-box{
+background:var(--panel2);
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+.progress{
+width:100%;
+height:25px;
+background:#0d111b;
+border-radius:20px;
+overflow:hidden;
+margin-top:10px;
+}
+
+.progress-fill{
+height:100%;
+width:10%;
+background:
+linear-gradient(90deg,
+var(--green),
+var(--blue));
+display:flex;
+justify-content:center;
+align-items:center;
+font-weight:bold;
+transition:.5s;
+}
+
+.log{
+background:#0e1420;
+padding:10px;
+border-radius:10px;
+height:420px;
+overflow:auto;
+}
+
+.log-entry{
+background:var(--panel2);
+padding:10px;
+margin-bottom:8px;
+border-left:4px solid var(--gold);
+border-radius:5px;
+font-size:.9em;
+}
+
+.log-entry.success{
+border-color:var(--green);
+}
+
+.log-entry.danger{
+border-color:var(--red);
+color:#ff8b98;
+}
+
+/* MODAL */
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.8);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:50;
+}
+
+.modal.active{
+display:flex;
+}
+
+.modal-box{
+background:var(--panel);
+padding:30px;
+border-radius:15px;
+width:500px;
+max-width:90%;
+border:2px solid var(--gold);
+text-align:center;
+animation:popup .3s;
+}
+
+@keyframes popup{
+from{
+transform:scale(.7);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
+.modal-box h2{
+color:var(--gold);
+margin-bottom:15px;
+}
+
+.inventory-item{
+background:var(--panel2);
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+border-left:4px solid var(--green);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+.main{
+flex-direction:column;
+}
+
+.sidebar,
+.right{
+width:100%;
+height:220px;
+border:none;
+}
+
+.map{
+grid-template-columns:1fr;
+}
+
+.actions{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- MENU -->
+
+<div class="main-menu" id="menu">
+
+<h1 class="title">🎭 EL HEIST VIP</h1>
+
+<p class="subtitle">
+THE GRAND CASINO CYBER HEIST
+</p>
+
+<button class="btn" onclick="startGame()">
+🚀 INICIAR HEIST
+</button>
+
+<button class="btn" onclick="showInstructions()">
+📜 INSTRUCCIONES
+</button>
+
+</div>
+
+<!-- GAME -->
+
+<div class="game" id="game">
+
+<div class="header">
+
+<div class="logo">
+🎭 EL HEIST VIP
+</div>
+
+<div class="stats">
+
+<div class="stat">
+💰 DINERO:
+<b id="money">5000</b>
+</div>
+
+<div class="stat">
+⚡ PA:
+<b id="pa">25</b>
+</div>
+
+<div class="stat">
+🚨 ALERTA:
+<b id="alert">0%</b>
+</div>
+
+<div class="stat">
+📅 TURNO:
+<b id="turn">1</b>
+</div>
+
+</div>
+
+</div>
+
+<div class="main">
+
+<!-- LEFT -->
+
+<div class="sidebar">
+
+<div class="section-title">
+👥 EQUIPO
+</div>
+
+<div id="team"></div>
+
+<button class="btn"
+style="width:100%;"
+onclick="nextTurn()">
+⏭ SIGUIENTE TURNO
+</button>
+
+</div>
+
+<!-- CENTER -->
+
+<div class="center">
+
+<div class="tabs">
+
+<div class="tab active"
+onclick="changeTab(0)">
+🗺 MAPA
+</div>
+
+<div class="tab"
+onclick="changeTab(1)">
+⚡ ACCIONES
+</div>
+
+<div class="tab"
+onclick="changeTab(2)">
+🎯 MISIONES
+</div>
+
+<div class="tab"
+onclick="changeTab(3)">
+🎒 INVENTARIO
+</div>
+
+</div>
+
+<!-- MAP -->
+
+<div class="content active" id="tab0">
+
+<h2 style="color:var(--gold);margin-bottom:15px;">
+CASINO LUNAR
+</h2>
+
+<div class="map" id="map"></div>
+
+</div>
+
+<!-- ACTIONS -->
+
+<div class="content" id="tab1">
+
+<h2 style="color:var(--gold);margin-bottom:15px;">
+ACCIONES
+</h2>
+
+<div class="actions" id="actions"></div>
+
+</div>
+
+<!-- MISSIONS -->
+
+<div class="content" id="tab2">
+
+<h2 style="color:var(--gold);margin-bottom:15px;">
+OBJETIVOS
+</h2>
+
+<div id="missions"></div>
+
+</div>
+
+<!-- INVENTORY -->
+
+<div class="content" id="tab3">
+
+<h2 style="color:var(--gold);margin-bottom:15px;">
+INVENTARIO
+</h2>
+
+<div id="inventory"></div>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="right">
+
+<div class="section-title">
+📊 PROGRESO
+</div>
+
+<div class="progress-box">
+
+Heist completado
+
+<div class="progress">
+
+<div class="progress-fill"
+id="progressFill">
+10%
+</div>
+
+</div>
+
+</div>
+
+<div class="section-title">
+📡 LOG DEL HEIST
+</div>
+
+<div class="log"
+id="log">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal"
+id="modal">
+
+<div class="modal-box">
+
+<h2 id="modalTitle">
+TÍTULO
+</h2>
+
+<p id="modalText">
+...
+</p>
+
+<br>
+
+<div id="modalButtons"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const game={
+
+money:5000,
+pa:25,
+alert:0,
+turn:1,
+progress:10,
+
+team:[
+{
+name:"RAVEN",
+role:"Infiltradora",
+skill:"Sigilo"
+},
+{
+name:"GHOST",
+role:"Hacker",
+skill:"Tecnología"
+},
+{
+name:"TITAN",
+role:"Asalto",
+skill:"Combate"
+},
+{
+name:"ZERO",
+role:"Ingeniero",
+skill:"Explosivos"
+}
+],
+
+rooms:[
+{
+id:1,
+name:"Entrada Principal",
+done:false,
+locked:false
+},
+{
+id:2,
+name:"Sala de Cámaras",
+done:false,
+locked:false
+},
+{
+id:3,
+name:"Centro de Seguridad",
+done:false,
+locked:false
+},
+{
+id:4,
+name:"Zona VIP",
+done:false,
+locked:true
+},
+{
+id:5,
+name:"Bóveda Central",
+done:false,
+locked:true
+},
+{
+id:6,
+name:"Helipuerto",
+done:false,
+locked:true
+}
+],
+
+missions:[
+{
+text:"Desactivar cámaras",
+done:false
+},
+{
+text:"Robar datos secretos",
+done:false
+},
+{
+text:"Abrir bóveda central",
+done:false
+},
+{
+text:"Escapar del casino",
+done:false
+}
+],
+
+inventory:[
+"🔑 Tarjeta maestra",
+"💻 Malware militar"
+]
+
+};
+
+/* START */
+
+function startGame(){
+
+document.getElementById("menu")
+.style.display="none";
+
+document.getElementById("game")
+.classList.add("active");
+
+renderAll();
+
+addLog(
+"🎭 El heist ha comenzado...",
+"success"
+);
+
+}
+
+/* RENDER */
+
+function renderAll(){
+
+renderStats();
+renderTeam();
+renderMap();
+renderActions();
+renderMissions();
+renderInventory();
+
+}
+
+function renderStats(){
+
+document.getElementById("money")
+.innerText=game.money;
+
+document.getElementById("pa")
+.innerText=game.pa;
+
+document.getElementById("alert")
+.innerText=game.alert+"%";
+
+document.getElementById("turn")
+.innerText=game.turn;
+
+document.getElementById("progressFill")
+.style.width=game.progress+"%";
+
+document.getElementById("progressFill")
+.innerText=game.progress+"%";
+
+}
+
+/* TEAM */
+
+function renderTeam(){
+
+const div=
+document.getElementById("team");
+
+div.innerHTML="";
+
+game.team.forEach(m=>{
+
+div.innerHTML+=`
+<div class="member">
+
+<h3>${m.name}</h3>
+
+<p>${m.role}</p>
+
+<small>${m.skill}</small>
+
+</div>
+`;
+
+});
+
+}
+
+/* MAP */
+
+function renderMap(){
+
+const div=
+document.getElementById("map");
+
+div.innerHTML="";
+
+game.rooms.forEach(r=>{
+
+div.innerHTML+=`
+<div class="room
+${r.done?"cleared":""}
+${r.locked?"locked":""}"
+
+onclick="enterRoom(${r.id})">
+
+<h3>${r.name}</h3>
+
+<p>
+${r.done?"COMPLETADO":"DISPONIBLE"}
+</p>
+
+</div>
+`;
+
+});
+
+}
+
+/* ACTIONS */
+
+const actions=[
+
+{
+name:"Hackear sistema",
+cost:5,
+effect(){
+game.alert=
+Math.max(0,
+game.alert-10);
+
+game.progress+=5;
+
+addLog(
+"💻 Sistema hackeado",
+"success"
+);
+}
+},
+
+{
+name:"Robar dinero",
+cost:4,
+effect(){
+
+const amount=
+Math.floor(Math.random()*3000)+1000;
+
+game.money+=amount;
+
+game.alert+=5;
+
+addLog(
+"💰 Robaste $"+amount,
+"success"
+);
+}
+},
+
+{
+name:"Neutralizar guardias",
+cost:6,
+effect(){
+
+game.alert+=8;
+
+game.progress+=8;
+
+addLog(
+"🔫 Guardias eliminados"
+);
+}
+},
+
+{
+name:"Desactivar alarmas",
+cost:7,
+effect(){
+
+game.alert=
+Math.max(0,
+game.alert-20);
+
+addLog(
+"🚨 Alarmas desactivadas",
+"success"
+);
+}
+}
+
+];
+
+function renderActions(){
+
+const div=
+document.getElementById("actions");
+
+div.innerHTML="";
+
+actions.forEach((a,i)=>{
+
+div.innerHTML+=`
+<div class="action"
+onclick="doAction(${i})">
+
+<h3>${a.name}</h3>
+
+<p>
+Costo: ${a.cost} PA
+</p>
+
+</div>
+`;
+
+});
+
+}
+
+function doAction(i){
+
+const a=actions[i];
+
+if(game.pa<a.cost){
+
+showModal(
+"⚠ SIN PA",
+"No tienes suficientes puntos."
+);
+
+return;
+}
+
+game.pa-=a.cost;
+
+a.effect();
+
+randomEvent();
+
+renderStats();
+
+}
+
+/* MISSIONS */
+
+function renderMissions(){
+
+const div=
+document.getElementById("missions");
+
+div.innerHTML="";
+
+game.missions.forEach(m=>{
+
+div.innerHTML+=`
+<div class="inventory-item">
+
+${m.done?"✅":"❌"}
+${m.text}
+
+</div>
+`;
+
+});
+
+}
+
+/* INVENTORY */
+
+function renderInventory(){
+
+const div=
+document.getElementById("inventory");
+
+div.innerHTML="";
+
+game.inventory.forEach(i=>{
+
+div.innerHTML+=`
+<div class="inventory-item">
+${i}
+</div>
+`;
+
+});
+
+}
+
+/* ROOM */
+
+function enterRoom(id){
+
+const room=
+game.rooms.find(r=>r.id===id);
+
+if(room.locked){
+
+showModal(
+"🔒 BLOQUEADO",
+"Debes completar zonas anteriores."
+);
+
+return;
+}
+
+if(!room.done){
+
+room.done=true;
+
+game.progress+=15;
+
+game.money+=2000;
+
+addLog(
+"🏆 Completaste "+
+room.name,
+"success"
+);
+
+if(id<game.rooms.length){
+
+game.rooms[id].locked=false;
+
+}
+
+if(id===5){
+
+game.missions[2].done=true;
+
+}
+
+if(id===6){
+
+game.missions[3].done=true;
+
+victory();
+
+}
+
+renderAll();
+
+}
+
+}
+
+/* TURN */
+
+function nextTurn(){
+
+game.turn++;
+
+game.pa=25;
+
+game.alert=
+Math.max(0,
+game.alert-5);
+
+addLog(
+"📅 Nuevo turno"
+);
+
+if(game.alert>=100){
+
+gameOver();
+
+}
+
+renderStats();
+
+}
+
+/* EVENTS */
+
+function randomEvent(){
+
+const chance=Math.random();
+
+if(chance<0.25){
+
+game.alert+=10;
+
+addLog(
+"🚨 Un guardia sospecha de ti",
+"danger"
+);
+
+}
+
+if(chance>0.85){
+
+const loot=
+["💎 Diamante",
+"🔫 Pistola táctica",
+"💾 Datos secretos"];
+
+const item=
+loot[
+Math.floor(
+Math.random()*loot.length
+)
+];
+
+game.inventory.push(item);
+
+addLog(
+"🎁 Encontraste: "+item,
+"success"
+);
+
+renderInventory();
+
+}
+
+}
+
+/* LOG */
+
+function addLog(text,type=""){
+
+const log=
+document.getElementById("log");
+
+log.innerHTML+=`
+<div class="log-entry ${type}">
+${text}
+</div>
+`;
+
+log.scrollTop=
+log.scrollHeight;
+
+}
+
+/* TABS */
+
+function changeTab(i){
+
+document.querySelectorAll(".tab")
+.forEach((t,index)=>{
+
+t.classList.toggle(
+"active",
+index===i
+);
+
+});
+
+document.querySelectorAll(".content")
+.forEach((c,index)=>{
+
+c.classList.toggle(
+"active",
+index===i
+);
+
+});
+
+}
+
+/* MODAL */
+
+function showModal(title,text){
+
+document.getElementById("modal")
+.classList.add("active");
+
+document.getElementById("modalTitle")
+.innerText=title;
+
+document.getElementById("modalText")
+.innerHTML=text;
+
+document.getElementById("modalButtons")
+.innerHTML=`
+<button class="btn"
+onclick="closeModal()">
+Cerrar
+</button>
+`;
+
+}
+
+function closeModal(){
+
+document.getElementById("modal")
+.classList.remove("active");
+
+}
+
+/* ENDINGS */
+
+function victory(){
+
+showModal(
+"🏆 HEIST COMPLETADO",
+"Lograste escapar con el botín."
+);
+
+addLog(
+"🎉 ATRACO PERFECTO",
+"success"
+);
+
+}
+
+function gameOver(){
+
+showModal(
+"💀 GAME OVER",
+"La policía rodeó el casino."
+);
+
+addLog(
+"🚔 HEIST FALLIDO",
+"danger"
+);
+
+}
+
+/* INSTRUCTIONS */
+
+function showInstructions(){
+
+showModal(
+"📜 INSTRUCCIONES",
+`
+Completa el atraco antes de que
+la alerta llegue al 100%.
+
+✔ Gestiona PA
+✔ Completa salas
+✔ Consigue dinero
+✔ Escapa vivo
+`
+);
+
+}
+
+</script>
+
+</body>
+</html>

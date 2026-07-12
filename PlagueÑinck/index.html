@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plaque Ñinck Ultra</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="topbar">
+<h1>🦠 PLAQUE ÑINCK</h1>
+
+<div id="stats">
+<div>Población: <span id="population">8000000000</span></div>
+<div>Infectados: <span id="infected">10</span></div>
+<div>Muertos: <span id="dead">0</span></div>
+<div>Cura: <span id="cure">0</span>%</div>
+<div>ADN: <span id="dna">0</span></div>
+</div>
+</div>
+
+<div id="news">
+📰 Primeros casos detectados...
+</div>
+
+<div id="game">
+
+<div id="world">
+<div class="country" data-name="España"></div>
+<div class="country" data-name="USA"></div>
+<div class="country" data-name="China"></div>
+<div class="country" data-name="Brasil"></div>
+<div class="country" data-name="Rusia"></div>
+<div class="country" data-name="India"></div>
+<div class="country" data-name="Australia"></div>
+<div class="country" data-name="África"></div>
+</div>
+
+<div id="panel">
+
+<h2>Evoluciones</h2>
+
+<button onclick="buyUpgrade('air')">
+✈ Aire (10 ADN)
+</button>
+
+<button onclick="buyUpgrade('water')">
+💧 Agua (15 ADN)
+</button>
+
+<button onclick="buyUpgrade('symptom')">
+🤒 Síntoma Grave (20 ADN)
+</button>
+
+<button onclick="buyUpgrade('resist')">
+🧬 Resistencia (25 ADN)
+</button>
+
+<button onclick="buyUpgrade('mutation')">
+☣ Mutación (35 ADN)
+</button>
+
+</div>
+
+</div>
+
+<div id="endScreen" class="hidden">
+<h1 id="endTitle"></h1>
+<p id="endText"></p>
+<button onclick="location.reload()">REINICIAR</button>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

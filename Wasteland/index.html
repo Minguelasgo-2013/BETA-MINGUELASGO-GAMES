@@ -1,0 +1,1238 @@
+<!-- =========================================
+WASTELAND EMPIRE - OMEGA EDITION
+SUPER UPDATE:
+✔ Zombies nocturnos
+✔ Oleadas enemigas
+✔ Armería
+✔ Refinería
+✔ Comerciante raro
+✔ Boss mutantes
+✔ Fuel balanceado
+✔ Munición balanceada
+✔ Eventos raros
+✔ Misiones
+✔ Defensa avanzada
+✔ Más loot
+✔ Sistema de energía
+✔ Sistema de niveles
+✔ Más dificultad progresiva
+✔ Más adictivo
+========================================= -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WASTELAND EMPIRE - OMEGA EDITION</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body{
+    font-family:'Press Start 2P',system-ui;
+    overflow:hidden;
+    background:#030303;
+}
+
+.scanline{
+    position:relative;
+}
+
+.scanline::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    background:
+    linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0,255,0,0.03) 50%
+    );
+
+    background-size:100% 4px;
+
+    animation:scan 5s linear infinite;
+}
+
+@keyframes scan{
+    from{transform:translateY(-100%);}
+    to{transform:translateY(100%);}
+}
+
+.terminal{
+    background:#080808;
+    border:3px solid #22c55e;
+    box-shadow:0 0 20px rgba(34,197,94,0.25);
+}
+
+.eventPop{
+    animation:pop .3s ease;
+}
+
+@keyframes pop{
+    from{
+        transform:scale(.9);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.glowRed{
+    box-shadow:0 0 25px rgba(255,0,0,0.5);
+}
+
+button{
+    transition:.2s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+</style>
+</head>
+
+<body class="text-green-400 min-h-screen scanline">
+
+<div class="max-w-7xl mx-auto p-4">
+
+<!-- HEADER -->
+
+<div class="flex justify-between items-center mb-5 border-b border-green-600 pb-4">
+
+<div class="flex items-center gap-4">
+
+<i class="fas fa-radiation text-4xl text-yellow-400 animate-pulse"></i>
+
+<div>
+
+<h1 class="text-3xl tracking-widest">
+WASTELAND EMPIRE
+</h1>
+
+<p class="text-xs text-zinc-500">
+OMEGA EDITION
+</p>
+
+</div>
+</div>
+
+<div class="flex gap-5 text-xs">
+
+<div>DÍA <span id="day" class="text-yellow-400">1</span></div>
+
+<div>NIVEL <span id="level" class="text-cyan-400">1</span></div>
+
+<div>XP <span id="xp">0</span></div>
+
+<div>OLA <span id="wave" class="text-red-400">1</span></div>
+
+</div>
+</div>
+
+<div class="grid grid-cols-12 gap-5">
+
+<!-- IZQUIERDA -->
+
+<div class="col-span-12 md:col-span-3 space-y-5">
+
+<div class="terminal p-4 rounded">
+
+<h2 class="text-yellow-400 mb-4">
+RECURSOS
+</h2>
+
+<div class="space-y-3 text-xs">
+
+<div class="flex justify-between">
+<span>🍖 Comida</span>
+<span id="food"></span>
+</div>
+
+<div class="flex justify-between">
+<span>💧 Agua</span>
+<span id="water"></span>
+</div>
+
+<div class="flex justify-between">
+<span>🔩 Chatarra</span>
+<span id="scrap"></span>
+</div>
+
+<div class="flex justify-between">
+<span>💊 Medicina</span>
+<span id="meds"></span>
+</div>
+
+<div class="flex justify-between">
+<span>🔫 Munición</span>
+<span id="ammo"></span>
+</div>
+
+<div class="flex justify-between">
+<span>⛽ Combustible</span>
+<span id="fuel"></span>
+</div>
+
+<div class="flex justify-between">
+<span>⚡ Energía</span>
+<span id="energy"></span>
+</div>
+
+</div>
+
+<!-- BARRAS -->
+
+<div class="mt-5 space-y-3">
+
+<div>
+<div class="flex justify-between text-[10px]">
+<span>SALUD</span>
+<span id="healthText"></span>
+</div>
+
+<div class="w-full bg-zinc-900 h-3">
+<div id="healthBar"
+class="h-3 bg-green-500"></div>
+</div>
+</div>
+
+<div>
+<div class="flex justify-between text-[10px]">
+<span>DEFENSA</span>
+<span id="defenseText"></span>
+</div>
+
+<div class="w-full bg-zinc-900 h-3">
+<div id="defenseBar"
+class="h-3 bg-red-500"></div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- SUPERVIVIENTES -->
+
+<div class="terminal p-4 rounded">
+
+<div class="flex justify-between items-center mb-4">
+
+<h2 class="text-yellow-400 text-sm">
+SUPERVIVIENTES
+</h2>
+
+<button onclick="recruit()"
+class="bg-green-700 px-2 py-1 text-[10px] hover:bg-green-600">
+
++ Reclutar
+
+</button>
+
+</div>
+
+<div id="survivors"
+class="space-y-2 text-[10px]"></div>
+
+</div>
+
+</div>
+
+<!-- CENTRO -->
+
+<div class="col-span-12 md:col-span-6 space-y-5">
+
+<!-- LOG -->
+
+<div id="log"
+class="terminal p-4 rounded h-64 overflow-y-auto text-xs space-y-2 font-mono">
+</div>
+
+<!-- ACCIONES -->
+
+<div class="terminal p-4 rounded">
+
+<h2 class="text-yellow-400 mb-4">
+ACCIONES
+</h2>
+
+<div class="grid grid-cols-2 gap-3">
+
+<button onclick="action('loot')"
+class="bg-zinc-900 border border-yellow-500 p-4 hover:bg-yellow-900">
+
+🔎 SAQUEAR
+
+</button>
+
+<button onclick="action('hunt')"
+class="bg-zinc-900 border border-red-500 p-4 hover:bg-red-900">
+
+☣️ CAZAR
+
+</button>
+
+<button onclick="action('trade')"
+class="bg-zinc-900 border border-purple-500 p-4 hover:bg-purple-900">
+
+💰 COMERCIAR
+
+</button>
+
+<button onclick="action('explore')"
+class="bg-zinc-900 border border-cyan-500 p-4 hover:bg-cyan-900">
+
+🗺️ EXPLORAR
+
+</button>
+
+</div>
+
+</div>
+
+<!-- BUILDINGS -->
+
+<div class="terminal p-4 rounded">
+
+<h2 class="text-yellow-400 mb-4">
+BASE
+</h2>
+
+<div id="buildings"
+class="grid grid-cols-2 gap-3 text-xs"></div>
+
+</div>
+
+</div>
+
+<!-- DERECHA -->
+
+<div class="col-span-12 md:col-span-3 space-y-5">
+
+<!-- EVENTOS -->
+
+<div class="terminal p-4 rounded">
+
+<h2 class="text-yellow-400 mb-4">
+EVENTOS
+</h2>
+
+<div id="events"
+class="space-y-2 text-[10px] max-h-64 overflow-y-auto"></div>
+
+</div>
+
+<!-- MISION -->
+
+<div class="terminal p-4 rounded">
+
+<h2 class="text-cyan-400 mb-3">
+MISIÓN ACTUAL
+</h2>
+
+<div id="mission"
+class="text-xs text-yellow-300">
+
+Consigue 300 de chatarra
+
+</div>
+
+</div>
+
+<!-- BOTONES -->
+
+<div class="space-y-3">
+
+<button onclick="nextDay()"
+class="w-full bg-red-700 hover:bg-red-600 py-5 text-sm tracking-widest">
+
+SIGUIENTE DÍA
+
+</button>
+
+<button onclick="saveGame()"
+class="w-full bg-zinc-800 hover:bg-zinc-700 py-3 text-xs">
+
+GUARDAR
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+GAME STATE
+========================= */
+
+let game = {
+
+day:1,
+level:1,
+xp:0,
+wave:1,
+
+health:85,
+defense:20,
+
+resources:{
+food:90,
+water:70,
+scrap:150,
+meds:20,
+ammo:45,
+fuel:35,
+energy:40
+},
+
+survivors:[
+{name:"Jax",role:"Líder",hp:90},
+{name:"Nova",role:"Exploradora",hp:80},
+{name:"Rook",role:"Ingeniero",hp:85}
+],
+
+buildings:{
+farm:1,
+turret:1,
+solar:1,
+workshop:1,
+armory:0,
+refinery:0
+}
+
+};
+
+/* =========================
+BUILDINGS
+========================= */
+
+const buildingData = {
+
+farm:{
+name:"Huerto",
+cost:90
+},
+
+turret:{
+name:"Torreta",
+cost:140
+},
+
+solar:{
+name:"Panel Solar",
+cost:120
+},
+
+workshop:{
+name:"Taller",
+cost:160
+},
+
+armory:{
+name:"Armería",
+cost:220
+},
+
+refinery:{
+name:"Refinería",
+cost:260
+}
+
+};
+
+/* =========================
+LOG
+========================= */
+
+function log(text,color="text-green-400"){
+
+const logDiv =
+document.getElementById("log");
+
+const entry =
+document.createElement("div");
+
+entry.className =
+color + " eventPop";
+
+entry.textContent =
+`[DÍA ${game.day}] ${text}`;
+
+logDiv.appendChild(entry);
+
+logDiv.scrollTop =
+logDiv.scrollHeight;
+
+if(logDiv.children.length > 30){
+
+logDiv.removeChild(
+logDiv.children[0]
+);
+
+}
+
+}
+
+/* =========================
+UPDATE UI
+========================= */
+
+function updateUI(){
+
+for(let key in game.resources){
+
+document.getElementById(key)
+.textContent =
+Math.floor(game.resources[key]);
+
+}
+
+document.getElementById("day")
+.textContent = game.day;
+
+document.getElementById("level")
+.textContent = game.level;
+
+document.getElementById("xp")
+.textContent = game.xp;
+
+document.getElementById("wave")
+.textContent = game.wave;
+
+document.getElementById("healthText")
+.textContent = game.health + "%";
+
+document.getElementById("healthBar")
+.style.width =
+game.health + "%";
+
+document.getElementById("defenseText")
+.textContent =
+game.defense;
+
+document.getElementById("defenseBar")
+.style.width =
+Math.min(game.defense,100)+"%";
+
+updateSurvivors();
+updateBuildings();
+
+}
+
+/* =========================
+SURVIVORS
+========================= */
+
+function updateSurvivors(){
+
+const div =
+document.getElementById("survivors");
+
+div.innerHTML = "";
+
+game.survivors.forEach(s=>{
+
+const el =
+document.createElement("div");
+
+el.className =
+"bg-zinc-900 p-2 flex justify-between";
+
+el.innerHTML = `
+<div>
+<div class="text-white">${s.name}</div>
+<div class="text-zinc-500">${s.role}</div>
+</div>
+
+<div class="text-red-400">
+${s.hp}%
+</div>
+`;
+
+div.appendChild(el);
+
+});
+
+}
+
+/* =========================
+BUILDINGS UI
+========================= */
+
+function updateBuildings(){
+
+const div =
+document.getElementById("buildings");
+
+div.innerHTML = "";
+
+for(let key in buildingData){
+
+let lvl =
+game.buildings[key] || 0;
+
+let data =
+buildingData[key];
+
+let el =
+document.createElement("div");
+
+el.className =
+"bg-zinc-900 border border-green-700 p-3";
+
+el.innerHTML = `
+
+<div class="flex justify-between items-center">
+
+<div>
+
+<div class="text-yellow-400">
+${data.name}
+</div>
+
+<div class="text-green-600 text-[10px]">
+Nivel ${lvl}
+</div>
+
+</div>
+
+<button
+onclick="upgradeBuilding('${key}')"
+class="bg-black border border-green-500 px-2 py-1 hover:bg-green-900">
+
++
+
+</button>
+
+</div>
+
+`;
+
+div.appendChild(el);
+
+}
+
+}
+
+/* =========================
+XP
+========================= */
+
+function addXP(amount){
+
+game.xp += amount;
+
+if(game.xp >= game.level * 120){
+
+game.xp = 0;
+
+game.level++;
+
+game.health =
+Math.min(100,game.health+10);
+
+log(
+"¡Subiste de nivel!",
+"text-cyan-400"
+);
+
+}
+
+}
+
+/* =========================
+ACTIONS
+========================= */
+
+function action(type){
+
+switch(type){
+
+/* SAQUEAR */
+
+case "loot":
+
+game.resources.water -= 4;
+
+let scrapLoot =
+rand(20,60);
+
+game.resources.scrap += scrapLoot;
+
+if(Math.random() < 0.50){
+
+let ammoLoot =
+rand(4,12);
+
+game.resources.ammo += ammoLoot;
+
+log(
+`Encontraste ${ammoLoot} balas.`,
+"text-red-400"
+);
+
+}
+
+if(Math.random() < 0.35){
+
+let fuelLoot =
+rand(3,8);
+
+game.resources.fuel += fuelLoot;
+
+log(
+`Encontraste ${fuelLoot} combustible.`,
+"text-yellow-400"
+);
+
+}
+
+log(
+`Saqueo exitoso +${scrapLoot} chatarra.`,
+"text-yellow-400"
+);
+
+addXP(25);
+
+break;
+
+/* HUNT */
+
+case "hunt":
+
+if(game.resources.ammo < 8){
+
+log(
+"No tienes suficiente munición.",
+"text-red-400"
+);
+
+return;
+}
+
+game.resources.ammo -= 8;
+
+if(Math.random() < 0.7){
+
+let food =
+rand(20,45);
+
+game.resources.food += food;
+
+log(
+`Mutante eliminado +${food} comida.`,
+"text-red-400"
+);
+
+}else{
+
+game.health -= 6;
+
+log(
+"El mutante te hirió.",
+"text-red-500"
+);
+
+}
+
+if(Math.random() < 0.2){
+
+log(
+"¡CRÍTICO! Encontraste loot raro.",
+"text-cyan-400"
+);
+
+game.resources.meds += 4;
+game.resources.scrap += 50;
+
+}
+
+addXP(35);
+
+break;
+
+/* TRADE */
+
+case "trade":
+
+if(game.resources.scrap < 35){
+
+log(
+"No tienes suficiente chatarra.",
+"text-red-400"
+);
+
+return;
+}
+
+game.resources.scrap -= 35;
+
+game.resources.food += 25;
+game.resources.water += 20;
+game.resources.ammo += rand(8,15);
+game.resources.fuel += rand(4,9);
+
+log(
+"Comercio exitoso.",
+"text-purple-400"
+);
+
+addXP(20);
+
+break;
+
+/* EXPLORE */
+
+case "explore":
+
+if(game.resources.fuel < 8){
+
+log(
+"No tienes suficiente combustible.",
+"text-red-400"
+);
+
+return;
+}
+
+game.resources.fuel -= 8;
+
+if(Math.random() < 0.5){
+
+game.resources.scrap += 100;
+
+let fuelGain =
+rand(10,20);
+
+game.resources.fuel += fuelGain;
+
+log(
+`Encontraste un bunker con ${fuelGain} fuel.`,
+"text-cyan-400"
+);
+
+}else{
+
+log(
+"La zona estaba vacía.",
+"text-zinc-400"
+);
+
+}
+
+if(Math.random() < 0.4){
+
+let ammo =
+rand(10,20);
+
+game.resources.ammo += ammo;
+
+log(
+`Encontraste ${ammo} munición.`,
+"text-red-400"
+);
+
+}
+
+addXP(45);
+
+break;
+
+}
+
+clamp();
+updateUI();
+
+}
+
+/* =========================
+BUILDINGS
+========================= */
+
+function upgradeBuilding(type){
+
+let lvl =
+game.buildings[type];
+
+let cost =
+buildingData[type].cost *
+(lvl + 1);
+
+if(game.resources.scrap < cost){
+
+log(
+"No tienes suficiente chatarra.",
+"text-red-400"
+);
+
+return;
+}
+
+game.resources.scrap -= cost;
+
+game.buildings[type]++;
+
+if(type === "turret"){
+
+game.defense += 10;
+
+}
+
+log(
+`${buildingData[type].name} mejorado.`,
+"text-blue-400"
+);
+
+updateUI();
+
+}
+
+/* =========================
+RECRUIT
+========================= */
+
+function recruit(){
+
+if(game.resources.food < 20 ||
+game.resources.water < 15){
+
+log(
+"No hay recursos suficientes.",
+"text-red-400"
+);
+
+return;
+}
+
+game.resources.food -= 20;
+game.resources.water -= 15;
+
+const names = [
+"Kane","Vex","Echo",
+"Drift","Raze","Ghost"
+];
+
+const roles = [
+"Explorador",
+"Médico",
+"Ingeniero",
+"Francotirador"
+];
+
+game.survivors.push({
+
+name:
+names[rand(0,names.length-1)],
+
+role:
+roles[rand(0,roles.length-1)],
+
+hp:
+rand(60,95)
+
+});
+
+log(
+"Nuevo superviviente reclutado.",
+"text-green-400"
+);
+
+updateUI();
+
+}
+
+/* =========================
+NEXT DAY
+========================= */
+
+function nextDay(){
+
+game.day++;
+
+/* CONSUMO */
+
+let pop =
+game.survivors.length;
+
+game.resources.food -= pop * 5;
+game.resources.water -= pop * 4;
+
+/* PRODUCCIÓN */
+
+game.resources.food +=
+game.buildings.farm * 12;
+
+game.resources.energy +=
+game.buildings.solar * 10;
+
+game.resources.scrap +=
+game.buildings.workshop * 8;
+
+/* ARMERÍA */
+
+game.resources.ammo +=
+game.buildings.armory * 5;
+
+/* REFINERÍA */
+
+game.resources.fuel +=
+game.buildings.refinery * 4;
+
+/* OLEADAS */
+
+if(game.day % 5 === 0){
+
+nightAttack();
+
+}
+
+/* EVENTO */
+
+randomEvent();
+
+if(game.resources.food <= 0 ||
+game.resources.water <= 0){
+
+game.health -= 10;
+
+}
+
+/* GAME OVER */
+
+if(game.health <= 0){
+
+alert(
+"GAME OVER - La colonia cayó."
+);
+
+location.reload();
+
+}
+
+clamp();
+saveGame();
+updateUI();
+
+log(
+"Comienza un nuevo día.",
+"text-yellow-400"
+);
+
+}
+
+/* =========================
+NIGHT ATTACK
+========================= */
+
+function nightAttack(){
+
+game.wave++;
+
+let power =
+rand(10,40) + game.wave * 4;
+
+log(
+`⚠️ Ataque nocturno - Fuerza ${power}`,
+"text-red-500"
+);
+
+if(game.defense >= power){
+
+game.resources.scrap += 60;
+
+log(
+"La base resistió el ataque.",
+"text-green-400"
+);
+
+}else{
+
+let dmg =
+power - game.defense;
+
+game.health -= dmg;
+
+log(
+`La base sufrió ${dmg} daño.`,
+"text-red-500"
+);
+
+}
+
+}
+
+/* =========================
+EVENTS
+========================= */
+
+function randomEvent(){
+
+const r = Math.random();
+
+const events =
+document.getElementById("events");
+
+const div =
+document.createElement("div");
+
+div.className =
+"eventPop text-yellow-400";
+
+if(r < 0.2){
+
+div.textContent =
+"☢️ Tormenta radiactiva.";
+
+game.health -= 5;
+
+}
+
+else if(r < 0.4){
+
+div.textContent =
+"🚚 Comerciante raro apareció.";
+
+game.resources.food += 15;
+game.resources.ammo += 10;
+
+}
+
+else if(r < 0.6){
+
+div.textContent =
+"🧟 Zombies detectados cerca.";
+
+game.defense += 2;
+
+}
+
+else{
+
+div.textContent =
+"🌙 Noche tranquila.";
+
+}
+
+events.appendChild(div);
+
+if(events.children.length > 18){
+
+events.removeChild(
+events.children[0]
+);
+
+}
+
+}
+
+/* =========================
+UTILS
+========================= */
+
+function rand(min,max){
+
+return Math.floor(
+Math.random()*(max-min+1)
+)+min;
+
+}
+
+function clamp(){
+
+for(let key in game.resources){
+
+game.resources[key] =
+Math.max(0,game.resources[key]);
+
+}
+
+game.health =
+Math.max(
+0,
+Math.min(100,game.health)
+);
+
+}
+
+/* =========================
+SAVE
+========================= */
+
+function saveGame(){
+
+localStorage.setItem(
+"omegaSave",
+JSON.stringify(game)
+);
+
+log(
+"Partida guardada.",
+"text-cyan-400"
+);
+
+}
+
+function loadGame(){
+
+const save =
+localStorage.getItem(
+"omegaSave"
+);
+
+if(save){
+
+game =
+JSON.parse(save);
+
+}
+
+}
+
+/* =========================
+INIT
+========================= */
+
+function init(){
+
+loadGame();
+
+updateUI();
+
+log(
+"Bienvenido al Yermo.",
+"text-green-400"
+);
+
+log(
+"La supervivencia comienza...",
+"text-yellow-400"
+);
+
+}
+
+window.onload = init;
+
+</script>
+
+</body>
+</html>
