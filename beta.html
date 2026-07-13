@@ -422,7 +422,7 @@
             <h2>Bienvenido a MINGUELASGO GAMES</h2>
             <p>La plataforma ha sido renovada con nuevas funciones.</p>
             <div class="welcome-features">
-                <div class="welcome-feat">20 Juegos</div>
+                <div class="welcome-feat">21 Juegos</div>
                 <div class="welcome-feat">Ranking Global</div>
                 <div class="welcome-feat">Chat en Vivo</div>
                 <div class="welcome-feat">Logros</div>
@@ -487,7 +487,7 @@
     <section class="hero">
         <div class="hero-bg-anim"><div class="hero-orb"></div><div class="hero-orb"></div><div class="hero-orb"></div></div>
         <div class="hero-logo">MINGUELASGO GAMES</div>
-        <p class="hero-tagline">Tu plataforma de juegos favorita, renovada. 20 juegos, ranking global, chat en vivo, logros y mucho mas.</p>
+        <p class="hero-tagline">Tu plataforma de juegos favorita, renovada. 21 juegos, ranking global, chat en vivo, logros y mucho mas.</p>
         <div class="hero-stats">
             <div class="hero-stat"><div class="hero-stat-number" id="statGames">0</div><div class="hero-stat-label">Juegos</div></div>
             <div class="hero-stat"><div class="hero-stat-number" id="statPlayers">0</div><div class="hero-stat-label">Jugadores</div></div>
@@ -519,7 +519,7 @@
     </section>
 
     <section id="catalogo">
-        <div class="section-header fade-in"><h2 class="section-title">Catalogo de Juegos</h2><p class="section-subtitle">Explora nuestros 20 juegos</p></div>
+        <div class="section-header fade-in"><h2 class="section-title">Catalogo de Juegos</h2><p class="section-subtitle">Explora nuestros 21 juegos</p></div>
         <div class="search-bar fade-in"><span class="search-icon">&#128269;</span><input type="text" id="searchInput" placeholder="Buscar juegos..." oninput="searchGames()"></div>
         <div class="filter-tabs fade-in" id="filterTabs"></div>
         <div class="games-grid" id="gamesGrid"></div>
@@ -649,7 +649,8 @@
         {name:'Vapor Chronicles',folder:'vapor-chronicles',icon:'📖',cat:'Aventura',grad:6,desc:'Cronicas del vapor'},
         {name:'Survival VIP',folder:'SurvivalVIP',icon:'☠️',cat:'Accion',grad:6,desc:'Sobrevive en una isla desierta'},
         {name:'Trivia Gaming',folder:'TriviaGaming',icon:'🧠',cat:'Arcade',grad:7,desc:'Demuestra cuanto sabes de gaming'},
-        {name:'Space Shooter',folder:'SpaceShooter',icon:'🚀',cat:'Accion',grad:8,desc:'Destruye naves enemigas'}
+        {name:'Space Shooter',folder:'SpaceShooter',icon:'🚀',cat:'Accion',grad:8,desc:'Destruye naves enemigas'},
+        {name:'Street Racer 3D',folder:'StreetRacer3D',icon:'🏎️',cat:'Accion',grad:1,desc:'Carreras urbanas en 3D con mapa'}
     ];
 
     // SEARCH
@@ -820,7 +821,7 @@
 
     var chatResponses={
         'hola':'Hola! Bienvenido a MINGUELASGO GAMES. Puedo recomendarte juegos o ayudarte con la plataforma.',
-        'juegos':'Tenemos 20 juegos disponibles: Accion, Aventura, Arcade y Estrategia. Te recomiendo ZOMBIE ASSAULT, Trivia Gaming o Space Shooter!',
+        'juegos':'Tenemos 21 juegos disponibles: Accion, Aventura, Arcade y Estrategia. Te recomiendo ZOMBIE ASSAULT, Trivia Gaming o Space Shooter!',
         'ranking':'Puedes ver el ranking global en la seccion Ranking. Juega para sumar puntos y subir posiciones!',
         'cuenta':'Puedes crear una cuenta haciendo clic en "Iniciar sesion" y luego en "Registrate".',
         'favorito':'Puedes marcar juegos favoritos con el corazon en cada tarjeta! Los populares son ZOMBIE ASSAULT, BlockDash y Space Shooter.',
@@ -829,7 +830,7 @@
         'logros':'Hay 10 logros por desbloquear: desde crear tu cuenta hasta jugar a medianoche. Explora todos!',
         'zombie':'ZOMBIE ASSAULT es nuestro juego mas popular. Elimina oleadas de zombies sin parar!',
         'arcade':'Tenemos 4 juegos arcade: CazaPuntos, Miextrix, Mins y NOTOQUES.',
-        'default':'Interesante pregunta! Te recomiendo explorar nuestros 20 juegos. Escribe "juegos" o "ayuda" para mas info.'
+        'default':'Interesante pregunta! Te recomiendo explorar nuestros 21 juegos. Escribe "juegos" o "ayuda" para mas info.'
     };
 
     function sendChatbotMsg(){
@@ -882,7 +883,7 @@
 
     // COUNTERS
     function animateCount(el,target,dur){var s=0,step=target/(dur/16);function tick(){s+=step;if(s>=target){el.textContent=target;return;}el.textContent=Math.floor(s);requestAnimationFrame(tick);}tick();}
-    animateCount(document.getElementById('statGames'),20,1500);
+    animateCount(document.getElementById('statGames'),21,1500);
     db.collection('players').get().then(function(snap){animateCount(document.getElementById('statPlayers'),snap.size||0,1500);});
     db.collection('comments').get().then(function(snap){animateCount(document.getElementById('statReviews'),snap.size||0,1500);});
 
