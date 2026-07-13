@@ -98,6 +98,20 @@ canvas{display:block}
 .result-val.gold{color:#ffd700}
 .result-val.best{color:#4ade80}
 
+/* VIP GATE */
+#vipGate{position:fixed;inset:0;background:#0a0a2e;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#vipGate.hidden{display:none}
+.vip-gate-logo{font-size:2.5em;font-weight:900;background:linear-gradient(135deg,#ffd700,#ffaa00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:5px}
+.vip-gate-sub{color:#7070a0;font-size:0.95em;margin-bottom:30px}
+.vip-gate-badge{background:linear-gradient(135deg,#ffd700,#ffaa00);color:#000;padding:5px 18px;border-radius:20px;font-size:0.8em;font-weight:700;margin-bottom:25px}
+.vip-gate-box{background:#111145;border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:35px;max-width:380px;width:100%;text-align:center}
+.vip-gate-box h3{color:#ffd700;margin-bottom:20px;font-size:1.2em}
+.vip-gate-box input{width:100%;padding:12px 16px;border:1.5px solid rgba(102,126,234,0.3);border-radius:10px;background:#0a0a2e;color:#e0e0ff;font-size:0.95em;outline:none;margin-bottom:10px;font-family:'Segoe UI',sans-serif}
+.vip-gate-box input:focus{border-color:#ffd700}
+.vip-gate-btn{width:100%;padding:13px;background:linear-gradient(135deg,#ffd700,#ffaa00);border:none;border-radius:10px;color:#000;font-size:1em;font-weight:700;cursor:pointer;transition:all 0.3s;margin-top:5px}
+.vip-gate-btn:hover{transform:translateY(-2px);box-shadow:0 5px 20px rgba(255,215,0,0.3)}
+.vip-gate-error{color:#ff4466;font-size:0.85em;min-height:20px;margin-top:8px}
+
 /* LOADING */
 #loading3d{position:fixed;inset:0;background:#0a0a2e;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100}
 #loading3d .ld-logo{font-size:2em;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:20px}
@@ -166,6 +180,20 @@ canvas{display:block}
 </style>
 </head>
 <body>
+
+<!-- VIP GATE -->
+<div id="vipGate">
+    <div class="vip-gate-logo">STREET RACER 3D</div>
+    <div class="vip-gate-badge">VIP EXCLUSIVE</div>
+    <div class="vip-gate-sub">Este juego requiere acceso VIP</div>
+    <div class="vip-gate-box">
+        <h3>Acceso VIP</h3>
+        <input type="text" id="vipUser" placeholder="Usuario VIP" autocomplete="off">
+        <input type="password" id="vipPass" placeholder="Contraseña VIP">
+        <button class="vip-gate-btn" onclick="checkVip()">Entrar</button>
+        <div class="vip-gate-error" id="vipError"></div>
+    </div>
+</div>
 
 <!-- LOADING -->
 <div id="loading3d">
@@ -322,6 +350,41 @@ canvas{display:block}
     </div>
 </div>
 
+<script>
+// ============================================================
+// VIP ACCESS GATE
+// ============================================================
+var VIP_HASHES = [
+    '255ed6d1bbb2ed5443429dd75c460a36181905044e4a8c58776aa3997c302a46'
+];
+
+async function sha256vip(text) {
+    var encoder = new TextEncoder();
+    var data = encoder.encode(text);
+    var hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    var hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+}
+
+if (sessionStorage.getItem('racer3d_vip') === 'granted') {
+    document.getElementById('vipGate').classList.add('hidden');
+}
+
+async function checkVip() {
+    var user = document.getElementById('vipUser').value.trim().toLowerCase();
+    var pass = document.getElementById('vipPass').value;
+    var err = document.getElementById('vipError');
+    if (!user || !pass) { err.textContent = 'Completa los campos'; return; }
+    var hash = await sha256vip(user + ':' + pass);
+    if (VIP_HASHES.indexOf(hash) !== -1) {
+        sessionStorage.setItem('racer3d_vip', 'granted');
+        document.getElementById('vipGate').classList.add('hidden');
+    } else {
+        err.textContent = 'Acceso denegado';
+    }
+}
+document.getElementById('vipPass').addEventListener('keydown', function(e) { if(e.key==='Enter') checkVip(); });
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ============================================================
