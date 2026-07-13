@@ -277,9 +277,9 @@
         .game-rating-stars { color: #fbbf24; }
         .game-bottom { display: flex; justify-content: space-between; align-items: center; }
         .game-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-        .fav-btn { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.4); border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2em; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; z-index: 2; }
-        .fav-btn:hover { background: rgba(0,0,0,0.6); transform: scale(1.15); }
-        .fav-btn.active { background: rgba(255,68,102,0.8); }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15); width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; justify-content: center; z-index: 2; color: rgba(255,255,255,0.6); backdrop-filter: blur(4px); }
+        .fav-btn:hover { background: rgba(102,126,234,0.4); border-color: rgba(102,126,234,0.5); transform: scale(1.1); color: #fff; }
+        .fav-btn.active { background: rgba(102,126,234,0.7); border-color: var(--accent); color: #fff; }
         .fav-section { background: var(--bg-secondary); }
         .fav-empty { text-align: center; color: var(--text-muted); padding: 30px; font-size: 1em; }
         .game-tag { padding: 3px 10px; background: rgba(102,126,234,0.15); border-radius: 10px; font-size: 0.75em; color: var(--accent); }
@@ -502,7 +502,7 @@
     </section>
 
     <section class="fav-section" id="favoritos" style="display:none">
-        <div class="section-header fade-in"><h2 class="section-title">Mis Favoritos</h2><p class="section-subtitle">Tus juegos preferidos</p></div>
+        <div class="section-header fade-in"><h2 class="section-title">Mis Likes</h2><p class="section-subtitle">Juegos que te gustan</p></div>
         <div class="games-grid" id="favGrid"></div>
     </section>
 
@@ -665,8 +665,8 @@
     function toggleFav(name,e){
         e.preventDefault();e.stopPropagation();
         var idx=favs.indexOf(name);
-        if(idx===-1){favs.push(name);showToast(name+' agregado a favoritos','success');}
-        else{favs.splice(idx,1);showToast(name+' quitado de favoritos','info');}
+        if(idx===-1){favs.push(name);showToast('Like! '+name+' guardado','success');}
+        else{favs.splice(idx,1);showToast(name+' quitado de likes','info');}
         localStorage.setItem('mg_favs',JSON.stringify(favs));
         document.querySelectorAll('.fav-btn').forEach(function(btn){btn.classList.toggle('active',isFav(btn.getAttribute('data-fav')));});
         renderFavGrid();
@@ -678,7 +678,7 @@
         favs.forEach(function(name){
             var g=GAMES.find(function(x){return x.name===name;});if(!g)return;
             var a=document.createElement('a');a.className='game-card visible';a.href=g.folder+'/index.html';a.setAttribute('data-cat',g.cat);a.setAttribute('data-name',g.name);
-            a.innerHTML='<div class="game-thumb grad-'+g.grad+'"><button class="fav-btn active" data-fav="'+esc(g.name)+'" onclick="toggleFav(\''+g.name.replace(/'/g,"\\'")+'\',event)">&#10084;</button>'+g.icon+'</div>'+
+            a.innerHTML='<div class="game-thumb grad-'+g.grad+'"><button class="fav-btn active" data-fav="'+esc(g.name)+'" onclick="toggleFav(\''+g.name.replace(/'/g,"\\'")+'\',event)">&#128077;</button>'+g.icon+'</div>'+
                 '<div class="game-info"><h4>'+esc(g.name)+'</h4><p>'+esc(g.desc)+'</p><div class="game-bottom"><div class="game-tags"><span class="game-tag">'+esc(g.cat)+'</span></div></div></div>';
             fg.appendChild(a);
         });
@@ -688,7 +688,7 @@
     var grid=document.getElementById('gamesGrid');
     GAMES.forEach(function(g,i){
         var a=document.createElement('a');a.className='game-card';a.href=g.folder+'/index.html';a.setAttribute('data-cat',g.cat);a.setAttribute('data-name',g.name);
-        a.innerHTML='<div class="game-thumb grad-'+g.grad+'"><button class="fav-btn'+(isFav(g.name)?' active':'')+'" data-fav="'+esc(g.name)+'" onclick="toggleFav(\''+g.name.replace(/'/g,"\\'")+'\',event)">&#10084;</button>'+g.icon+'</div>'+
+        a.innerHTML='<div class="game-thumb grad-'+g.grad+'"><button class="fav-btn'+(isFav(g.name)?' active':'')+'" data-fav="'+esc(g.name)+'" onclick="toggleFav(\''+g.name.replace(/'/g,"\\'")+'\',event)">&#128077;</button>'+g.icon+'</div>'+
             '<div class="game-info"><h4>'+esc(g.name)+'</h4><p>'+esc(g.desc)+'</p>'+
             '<div class="game-rating"><span class="game-rating-stars">★★★★★</span></div>'+
             '<div class="game-bottom"><div class="game-tags"><span class="game-tag">'+esc(g.cat)+'</span></div></div></div>';
@@ -822,7 +822,7 @@
         'juegos':'Tenemos 19 juegos disponibles: Accion, Aventura, Arcade y Estrategia. Te recomiendo ZOMBIE ASSAULT o Street Racer 3D!',
         'ranking':'Puedes ver el ranking global en la seccion Ranking. Juega para sumar puntos y subir posiciones!',
         'cuenta':'Puedes crear una cuenta haciendo clic en "Iniciar sesion" y luego en "Registrate".',
-        'favorito':'Puedes marcar juegos favoritos con el corazon en cada tarjeta! Los populares son ZOMBIE ASSAULT, BlockDash y Space Shooter.',
+        'favorito':'Dale like a tus juegos favoritos con el pulgar en cada tarjeta! Los populares son ZOMBIE ASSAULT, BlockDash y Street Racer 3D.',
         'ayuda':'Puedo ayudarte con: juegos, ranking, cuenta, chat, logros. Preguntame lo que quieras!',
         'chat':'El chat en vivo esta disponible para usuarios registrados. Inicia sesion para poder escribir!',
         'logros':'Hay 10 logros por desbloquear: desde crear tu cuenta hasta jugar a medianoche. Explora todos!',
